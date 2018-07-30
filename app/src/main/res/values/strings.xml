@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Guitar Tuner</string>
-    <string name="pitch">%1$f Hz</string>
-    <string name="note">%1$f</string>
+    <string name="pitch">Pitch: %1$.2f Hz</string>
+    <string name="noPitchDetected">No Pitch Detected</string>
+    <string name="permissionExplanationText">This application requires permission to record audio in order to detect the instrument pitch from the microphone input.</string>
+    <string name="stringLabel">"String: "</string>
+    <string name="noteLabel">"Note: "</string>
 </resources>
