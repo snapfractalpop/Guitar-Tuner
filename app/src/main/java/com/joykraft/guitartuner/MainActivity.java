@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.Deque;
@@ -36,8 +37,11 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     private static final int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLING_RATE,
             CHANNEL_CONFIG, AUDIO_FORMAT) * BUFFER_MULTIPLIER;
     private static final int BUFFER_OVERLAP = BUFFER_SIZE / 2;
-    private static final int PITCH_HISTORY_SIZE = 5;
-    public static final float OVERTONE_DETECTION_THRESHOLD = 0.01f;
+    private static final int MEAN_PITCH_SAMPLE_COUNT = 10;
+    private static final int OVERTONE_DETECTION_SAMPLE_COUNT = 5;
+    private static final float OVERTONE_DETECTION_THRESHOLD = 0.01f;
+    private static final int PITCH_HISTORY_SIZE = Math.max(MEAN_PITCH_SAMPLE_COUNT,
+            OVERTONE_DETECTION_SAMPLE_COUNT);
 
     private static final int PERMISSION_REQUEST_RECORD_AUDIO = 0;
 
@@ -140,8 +144,27 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         });
     }
 
+    private float getAveragePitch() {
+        float pitchSum = 0f;
+        int samples = 0;
+
+        for (float pitch : mPreviousPitches) {
+            if (pitch > 0) {
+                pitchSum += pitch;
+                samples++;
+                if (samples >= MEAN_PITCH_SAMPLE_COUNT) {
+                    break;
+                }
+            }
+        }
+
+        /* return -1 if no valid samples were found */
+        return samples > 0 ? pitchSum / samples : -1;
+    }
+
     private void updatePitchViews() {
-        final float pitch = mPreviousPitches.peekLast();
+//        final float pitch = mPreviousPitches.peekLast();
+        final float pitch = getAveragePitch();
 
         if (pitch <= 0) {
             mPitchText.setText(R.string.noPitchDetected);
