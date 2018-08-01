@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.TextView;
 
 import java.util.Deque;
@@ -37,8 +36,14 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     private static final int BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLING_RATE,
             CHANNEL_CONFIG, AUDIO_FORMAT) * BUFFER_MULTIPLIER;
     private static final int BUFFER_OVERLAP = BUFFER_SIZE / 2;
+
+    /** The number of results used to calculate a weighted average pitch */
     private static final int MEAN_PITCH_SAMPLE_COUNT = 10;
+    /** Used to calculate weight from probability */
+    private static final float MEAN_PITCH_WEIGHT_EXPONENT = 10f;
+    /** The number of results used to detect overtones */
     private static final int OVERTONE_DETECTION_SAMPLE_COUNT = 5;
+    /** Results this close to twice the fundamental are assumed to be overtones */
     private static final float OVERTONE_DETECTION_THRESHOLD = 0.01f;
     private static final int PITCH_HISTORY_SIZE = Math.max(MEAN_PITCH_SAMPLE_COUNT,
             OVERTONE_DETECTION_SAMPLE_COUNT);
@@ -50,10 +55,19 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     private TextView mPitchText, mNoteText, mStringText;
     private PitchMeter mPitchMeter;
 
-    private Deque<Float> mPreviousPitches = new LinkedList<Float>();
+    private Deque<PitchResult> mPreviousResults = new LinkedList<PitchResult>();
 
     private float noteFromFrequency(float frequency) {
         return (float) (12 * Math.log(frequency / 27.5) / Math.log(2)) + 9;
+    }
+
+    private class PitchResult {
+        final float pitch, probability;
+
+        PitchResult(float pitch, float probability) {
+            this.pitch = pitch;
+            this.probability = probability;
+        }
     }
 
     @Override
@@ -118,22 +132,23 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     @Override
     public void handlePitch(PitchDetectionResult result, AudioEvent audioEvent) {
         float pitch = result.getPitch();
+        float probability = result.getProbability();
 
-        if (mPreviousPitches.size() < PITCH_HISTORY_SIZE) {
-            mPreviousPitches.addLast(pitch);
+        if (mPreviousResults.size() < PITCH_HISTORY_SIZE) {
+            mPreviousResults.addLast(new PitchResult(pitch, probability));
         } else {
             float overtoneDistance;
 
-            for (float fundamental : mPreviousPitches) {
-                overtoneDistance = Math.abs((pitch - 2 * fundamental) / fundamental);
+            for (PitchResult pitchResult : mPreviousResults) {
+                overtoneDistance = Math.abs((pitch - 2 * pitchResult.pitch) / pitchResult.pitch);
                 if (overtoneDistance < OVERTONE_DETECTION_THRESHOLD) {
                     pitch /= 2;
                     break;
                 }
             }
 
-            mPreviousPitches.removeFirst();
-            mPreviousPitches.addLast(pitch);
+            mPreviousResults.removeFirst();
+            mPreviousResults.addLast(new PitchResult(pitch, probability));
         }
 
         runOnUiThread(new Runnable() {
@@ -144,27 +159,30 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         });
     }
 
-    private float getAveragePitch() {
+    private float getWeightedAveragePitch() {
         float pitchSum = 0f;
+        float accumulatedWeight = 0;
         int samples = 0;
 
-        for (float pitch : mPreviousPitches) {
-            if (pitch > 0) {
-                pitchSum += pitch;
-                samples++;
-                if (samples >= MEAN_PITCH_SAMPLE_COUNT) {
+        for (PitchResult result : mPreviousResults) {
+            float weight = (float) Math.pow(result.probability, MEAN_PITCH_WEIGHT_EXPONENT);
+
+            if (result.probability > 0) {
+                pitchSum += result.pitch * weight;
+                accumulatedWeight += weight;
+                if (++samples >= MEAN_PITCH_SAMPLE_COUNT) {
                     break;
                 }
             }
         }
 
         /* return -1 if no valid samples were found */
-        return samples > 0 ? pitchSum / samples : -1;
+        return samples > 0 ? pitchSum / accumulatedWeight : -1;
     }
 
     private void updatePitchViews() {
-//        final float pitch = mPreviousPitches.peekLast();
-        final float pitch = getAveragePitch();
+//        final float pitch = mPreviousResults.peekLast();
+        final float pitch = getWeightedAveragePitch();
 
         if (pitch <= 0) {
             mPitchText.setText(R.string.noPitchDetected);
