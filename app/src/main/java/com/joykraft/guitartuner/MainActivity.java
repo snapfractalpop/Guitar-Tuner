@@ -2,15 +2,20 @@ package com.joykraft.guitartuner;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.util.Deque;
@@ -37,12 +42,13 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
             CHANNEL_CONFIG, AUDIO_FORMAT) * BUFFER_MULTIPLIER;
     private static final int BUFFER_OVERLAP = BUFFER_SIZE / 2;
 
+    // TODO: add preferences
     /** The number of results used to calculate a weighted average pitch */
     private static final int MEAN_PITCH_SAMPLE_COUNT = 10;
     /** Used to calculate weight from probability */
     private static final float MEAN_PITCH_WEIGHT_EXPONENT = 10f;
     /** The number of results used to detect overtones */
-    private static final int OVERTONE_DETECTION_SAMPLE_COUNT = 5;
+    private static final int OVERTONE_DETECTION_SAMPLE_COUNT = 10;
     /** Results this close to twice the fundamental are assumed to be overtones */
     private static final float OVERTONE_DETECTION_THRESHOLD = 0.01f;
     private static final int PITCH_HISTORY_SIZE = Math.max(MEAN_PITCH_SAMPLE_COUNT,
@@ -134,22 +140,32 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         float pitch = result.getPitch();
         float probability = result.getProbability();
 
-        if (mPreviousResults.size() < PITCH_HISTORY_SIZE) {
-            mPreviousResults.addLast(new PitchResult(pitch, probability));
-        } else {
+        final boolean usingOvertoneDetection = PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean(getString(R.string.key_preference_overtone_detection), true);
+
+        if (usingOvertoneDetection) {
+            int samples = 0;
             float overtoneDistance;
 
-            for (PitchResult pitchResult : mPreviousResults) {
-                overtoneDistance = Math.abs((pitch - 2 * pitchResult.pitch) / pitchResult.pitch);
+            for (PitchResult fundamental : mPreviousResults) {
+                overtoneDistance = Math.abs((pitch - 2 * fundamental.pitch) / fundamental.pitch);
                 if (overtoneDistance < OVERTONE_DETECTION_THRESHOLD) {
                     pitch /= 2;
                     break;
                 }
+                if (++samples >= OVERTONE_DETECTION_SAMPLE_COUNT) {
+                    break;
+                }
             }
 
-            mPreviousResults.removeFirst();
-            mPreviousResults.addLast(new PitchResult(pitch, probability));
         }
+
+        if (mPreviousResults.size() >= PITCH_HISTORY_SIZE) {
+            mPreviousResults.removeFirst();
+        }
+
+        mPreviousResults.addLast(new PitchResult(pitch, probability));
 
         runOnUiThread(new Runnable() {
             @Override
@@ -200,6 +216,24 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
                         Tuning.getNoteSpan(nearestString.note)), TextView.BufferType.SPANNABLE);
                 mPitchMeter.setPitchError(note - nearestString.note);
             }
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

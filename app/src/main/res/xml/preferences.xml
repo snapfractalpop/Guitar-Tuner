@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="@string/value_tuning_standard"
+        android:entries="@array/tunings_names"
+        android:entryValues="@array/tunings_values"
+        android:key="@string/key_preference_tuning"
+        android:title="@string/preference_label_tuning" />
+
+    <ListPreference
+        android:defaultValue="@string/value_algorithm_fyin"
+        android:entries="@array/algorithm_names"
+        android:entryValues="@array/algorithm_values"
+        android:key="@string/key_preference_algorithm"
+        android:title="@string/preference_label_algorithm" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_preference_overtone_detection"
+        android:title="@string/preference_label_overtone_detection" />
+</PreferenceScreen>
