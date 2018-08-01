@@ -196,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
             InstrumentString nearestString = getNearestString(STANDARD, note);
 
             if (nearestString != null) {
-                mStringText.setText(TextUtils.concat(getString(R.string.stringLabel),
+                mStringText.setText(TextUtils.concat(nearestString.label,
                         Tuning.getNoteSpan(nearestString.note)), TextView.BufferType.SPANNABLE);
                 mPitchMeter.setPitchError(note - nearestString.note);
             }

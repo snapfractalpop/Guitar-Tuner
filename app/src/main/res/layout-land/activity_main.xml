@@ -6,17 +6,17 @@
     android:layout_height="match_parent"
     android:keepScreenOn="true"
     tools:context=".MainActivity"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="73dp">
 
     <TextView
-        android:id="@+id/pitchText"
+        android:id="@+id/stringText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pitch"
-        android:textSize="18sp"
+        android:text="String"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/noteText"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/pitchMeter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
@@ -27,21 +27,19 @@
         android:layout_height="wrap_content"
         android:text="Note"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/stringText"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@+id/pitchText"
+        app:layout_constraintEnd_toStartOf="@+id/pitchMeter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pitchText" />
+        app:layout_constraintTop_toBottomOf="@+id/stringText" />
 
     <TextView
-        android:id="@+id/stringText"
+        android:id="@+id/pitchText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="String"
-        android:textSize="36sp"
+        android:text="Pitch"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noteText" />
 

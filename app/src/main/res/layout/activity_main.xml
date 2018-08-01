@@ -9,11 +9,12 @@
     tools:layout_editor_absoluteY="81dp">
 
     <TextView
-        android:id="@+id/pitchText"
+        android:id="@+id/stringText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pitch"
-        android:textSize="18sp"
+        android:text="String"
+        android:textSize="36sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/noteText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -27,19 +28,19 @@
         android:layout_height="wrap_content"
         android:text="Note"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/stringText"
+        app:layout_constraintBottom_toTopOf="@+id/pitchText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pitchText" />
+        app:layout_constraintTop_toBottomOf="@+id/stringText" />
 
     <TextView
-        android:id="@+id/stringText"
+        android:id="@+id/pitchText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="String"
-        android:textSize="36sp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        android:text="Pitch"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/pitchMeter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +59,6 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
