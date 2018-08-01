@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     }
 
     private void updatePitchViews() {
-//        final float pitch = mPreviousResults.peekLast();
         final float pitch = getWeightedAveragePitch();
 
         if (pitch <= 0) {
