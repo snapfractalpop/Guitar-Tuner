@@ -8,7 +8,7 @@ import android.text.style.SubscriptSpan;
 /**
  * Created by Matthew Kevins on 7/27/18.
  */
-class Tuning {
+class Tunings {
     private static final String[] KEYS = {"C","C♯","D","D♯","E","F","F♯","G","G♯","A","A♯","B"};
 
     static class InstrumentString {
@@ -21,16 +21,35 @@ class Tuning {
         }
     }
 
-    static final InstrumentString[] STANDARD = {
-            new InstrumentString("1st string: ", 52), /* E₄ */
-            new InstrumentString("2nd string: ", 47), /* B₃ */
-            new InstrumentString("3rd string: ", 43), /* G₃ */
-            new InstrumentString("4th string: ", 38), /* D₃ */
-            new InstrumentString("5th string: ", 33), /* A₂ */
-            new InstrumentString("6th string: ", 28), /* E₂ */
-    };
+    static enum Tuning { STANDARD, DROPPED_D; }
 
-    static InstrumentString getNearestString(InstrumentString[] setOfStrings, float note) {
+    private static InstrumentString[] getStrings(Tuning tuning) {
+        switch (tuning) {
+            default:
+            case STANDARD:
+                return new InstrumentString[] {
+                        new InstrumentString("1st string: ", 52), /* E₄ */
+                        new InstrumentString("2nd string: ", 47), /* B₃ */
+                        new InstrumentString("3rd string: ", 43), /* G₃ */
+                        new InstrumentString("4th string: ", 38), /* D₃ */
+                        new InstrumentString("5th string: ", 33), /* A₂ */
+                        new InstrumentString("6th string: ", 28), /* E₂ */
+                };
+            case DROPPED_D:
+                return new InstrumentString[] {
+                        new InstrumentString("1st string: ", 52), /* E₄ */
+                        new InstrumentString("2nd string: ", 47), /* B₃ */
+                        new InstrumentString("3rd string: ", 43), /* G₃ */
+                        new InstrumentString("4th string: ", 38), /* D₃ */
+                        new InstrumentString("5th string: ", 33), /* A₂ */
+                        new InstrumentString("6th string: ", 26), /* D₂ */
+                };
+        }
+    }
+
+
+    static InstrumentString getNearestString(Tuning tuning, float note) {
+        InstrumentString[] setOfStrings = getStrings(tuning);
         InstrumentString nearest = null;
         float minDistance = Float.MAX_VALUE;
 

@@ -2,14 +2,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:defaultValue="@string/value_tuning_standard"
+        android:defaultValue="STANDARD"
         android:entries="@array/tunings_names"
         android:entryValues="@array/tunings_values"
         android:key="@string/key_preference_tuning"
         android:title="@string/preference_label_tuning" />
 
     <ListPreference
-        android:defaultValue="@string/value_algorithm_fyin"
+        android:defaultValue="FFT_YIN"
         android:entries="@array/algorithm_names"
         android:entryValues="@array/algorithm_values"
         android:key="@string/key_preference_algorithm"

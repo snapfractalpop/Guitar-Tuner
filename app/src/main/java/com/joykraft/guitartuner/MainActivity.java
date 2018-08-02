@@ -2,11 +2,9 @@ package com.joykraft.guitartuner;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -14,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -29,8 +26,8 @@ import be.tarsos.dsp.pitch.PitchDetectionHandler;
 import be.tarsos.dsp.pitch.PitchDetectionResult;
 import be.tarsos.dsp.pitch.PitchProcessor;
 
-import static be.tarsos.dsp.pitch.PitchProcessor.*;
-import static com.joykraft.guitartuner.Tuning.*;
+import static com.joykraft.guitartuner.AppPreferences.*;
+import static com.joykraft.guitartuner.Tunings.*;
 
 public class MainActivity extends AppCompatActivity implements PitchDetectionHandler {
 
@@ -105,9 +102,7 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     protected void onStop() {
         super.onStop();
         if (mDispatcher != null) {
-            if (!mDispatcher.isStopped()) {
-                mDispatcher.stop();
-            }
+            if (!mDispatcher.isStopped()) { mDispatcher.stop(); }
             mDispatcher.removeAudioProcessor(mProcessor);
         }
     }
@@ -115,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     private void initializePitchDetection() {
         mDispatcher = AudioDispatcherFactory.fromDefaultMicrophone(SAMPLING_RATE,
                 BUFFER_SIZE, BUFFER_OVERLAP);
-        mProcessor = new PitchProcessor(PitchEstimationAlgorithm.FFT_YIN,
-                SAMPLING_RATE, BUFFER_SIZE, this);
+        mProcessor = new PitchProcessor(getPitchEstimationAlgorithm(this), SAMPLING_RATE,
+                BUFFER_SIZE, this);
         mDispatcher.addAudioProcessor(mProcessor);
         Thread dispatcherThread = new Thread(mDispatcher, "Audio Dispatcher");
         dispatcherThread.start();
@@ -130,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initializePitchDetection();
             } else {
-                startActivity(new Intent(this, PermissionExplanation.class));
+                startActivity(new Intent(this, PermissionExplanationActivity.class));
             }
         }
     }
@@ -140,11 +135,7 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         float pitch = result.getPitch();
         float probability = result.getProbability();
 
-        final boolean usingOvertoneDetection = PreferenceManager
-                .getDefaultSharedPreferences(this)
-                .getBoolean(getString(R.string.key_preference_overtone_detection), true);
-
-        if (usingOvertoneDetection) {
+        if (getOvertoneDetectionEnabled(this)) {
             int samples = 0;
             float overtoneDistance;
 
@@ -208,12 +199,12 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
             final float note = noteFromFrequency(pitch);
             mPitchText.setText(getString(R.string.pitch, pitch));
             mNoteText.setText(TextUtils.concat(getString(R.string.noteLabel),
-                    Tuning.getNoteSpan(note)), TextView.BufferType.SPANNABLE);
-            InstrumentString nearestString = getNearestString(STANDARD, note);
+                    Tunings.getNoteSpan(note)), TextView.BufferType.SPANNABLE);
+            InstrumentString nearestString = getNearestString(getTuning(this), note);
 
             if (nearestString != null) {
                 mStringText.setText(TextUtils.concat(nearestString.label,
-                        Tuning.getNoteSpan(nearestString.note)), TextView.BufferType.SPANNABLE);
+                        Tunings.getNoteSpan(nearestString.note)), TextView.BufferType.SPANNABLE);
                 mPitchMeter.setPitchError(note - nearestString.note);
             }
         }

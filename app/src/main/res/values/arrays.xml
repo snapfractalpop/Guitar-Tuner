@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tunings_names">
-        <item>@string/name_tuning_standard</item>
+        <item>Standard</item>
+        <item>Dropped D</item>
     </string-array>
     <string-array name="tunings_values">
-        <item>@string/value_tuning_standard</item>
+        <item>STANDARD</item>
+        <item>DROPPED_D</item>
     </string-array>
 
     <string-array name="algorithm_names">
-       <item>@string/name_algorithm_fyin</item>
+       <item>YIN</item>
+        <item>MPM</item>
+        <item>Fast YIN</item>
+        <item>Dynamic Wavelet</item>
+        <item>FFT</item>
+        <item>AMDF</item>
     </string-array>
     <string-array name="algorithm_values">
-        <item>@string/value_algorithm_fyin</item>
+        <item>YIN</item>
+        <item>MPM</item>
+        <item>FFT_YIN</item>
+        <item>DYNAMIC_WAVELET</item>
+        <item>FFT_PITCH</item>
+        <item>AMDF</item>
     </string-array>
 </resources>

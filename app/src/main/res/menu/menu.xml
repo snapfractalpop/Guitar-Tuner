@@ -3,8 +3,8 @@
     xmlns:compat="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:title=""
         android:icon="@android:drawable/ic_menu_preferences"
         android:id="@+id/settings"
         compat:showAsAction="always" />
-
 </menu>

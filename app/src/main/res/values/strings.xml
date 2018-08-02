@@ -6,6 +6,7 @@
     <string name="noteLabel">"Note: "</string>
 
     <!-- Strings related to Settings -->
+    <string name="title_activity_settings">Settings</string>
 
     <string name="preference_label_tuning">Tuning</string>
     <string name="preference_label_algorithm">Algorithm</string>
@@ -14,12 +15,4 @@
     <string name="key_preference_tuning">preferenceTuning</string>
     <string name="key_preference_algorithm">preferenceAlgorithm</string>
     <string name="key_preference_overtone_detection">preferenceOvertoneDetection</string>
-
-    <string name="value_tuning_standard">tuningStandard</string>
-    <string name="name_tuning_standard">Standard</string>
-
-    <string name="value_algorithm_fyin">algorithmFyin</string>
-    <string name="name_algorithm_fyin">Fast YIN</string>
-    <string name="title_activity_settings">Settings</string>
-
 </resources>
