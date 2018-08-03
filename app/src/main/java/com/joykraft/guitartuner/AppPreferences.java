@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import be.tarsos.dsp.pitch.PitchProcessor;
-
 import static be.tarsos.dsp.pitch.PitchProcessor.*;
 import static com.joykraft.guitartuner.Tunings.*;
 
@@ -19,8 +17,8 @@ class AppPreferences {
        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    static boolean getOvertoneDetectionEnabled(Context context) {
-        String key = context.getString(R.string.key_preference_overtone_detection);
+    static boolean getOvertoneCorrectionEnabled(Context context) {
+        String key = context.getString(R.string.key_preference_overtone_correction);
         return getSharedPreferences(context).getBoolean(key, true);
     }
 

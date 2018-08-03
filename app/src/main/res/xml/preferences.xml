@@ -6,17 +6,20 @@
         android:entries="@array/tunings_names"
         android:entryValues="@array/tunings_values"
         android:key="@string/key_preference_tuning"
-        android:title="@string/preference_label_tuning" />
+        android:title="@string/preference_label_tuning"
+        android:summary="%s" />
 
     <ListPreference
         android:defaultValue="FFT_YIN"
         android:entries="@array/algorithm_names"
         android:entryValues="@array/algorithm_values"
         android:key="@string/key_preference_algorithm"
-        android:title="@string/preference_label_algorithm" />
+        android:title="@string/preference_label_algorithm"
+        android:summary="%s" />
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="@string/key_preference_overtone_detection"
-        android:title="@string/preference_label_overtone_detection" />
+        android:key="@string/key_preference_overtone_correction"
+        android:title="@string/preference_label_overtone_correction"
+        android:summary="@string/preference_summary_overtone_correction" />
 </PreferenceScreen>

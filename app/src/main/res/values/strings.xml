@@ -10,9 +10,10 @@
 
     <string name="preference_label_tuning">Tuning</string>
     <string name="preference_label_algorithm">Algorithm</string>
-    <string name="preference_label_overtone_detection">Overtone Detection</string>
+    <string name="preference_label_overtone_correction">Overtone Correction</string>
 
     <string name="key_preference_tuning">preferenceTuning</string>
     <string name="key_preference_algorithm">preferenceAlgorithm</string>
-    <string name="key_preference_overtone_detection">preferenceOvertoneDetection</string>
+    <string name="key_preference_overtone_correction">preferenceOvertoneDetection</string>
+    <string name="preference_summary_overtone_correction">The pitch detection algorithm sometimes detects the 2f harmonic partial as the fundamental. This attempts to detect such errors and correct them.</string>
 </resources>

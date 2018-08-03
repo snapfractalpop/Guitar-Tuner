@@ -5,6 +5,8 @@ import android.text.Spanned;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.SubscriptSpan;
 
+import static com.joykraft.guitartuner.Tunings.InstrumentString.*;
+
 /**
  * Created by Matthew Kevins on 7/27/18.
  */
@@ -19,31 +21,42 @@ class Tunings {
             this.label = label;
             this.note = note;
         }
+
+        static InstrumentString[] createStringSet(int[] notes) {
+            InstrumentString[] stringSet = new InstrumentString[notes.length];
+
+            for (int i = 0; i < notes.length; i++) {
+                stringSet[i] = new InstrumentString(inferLabel(i + 1), notes[i]);
+            }
+
+            return stringSet;
+        }
+
+        static String inferLabel(int n) {
+            switch (n % 10) {
+                case 1:
+                    return Integer.toString(n) + "st string: ";
+                case 2:
+                    return Integer.toString(n) + "nd string: ";
+                case 3:
+                    return Integer.toString(n) + "rd string: ";
+                default:
+                    return Integer.toString(n) + "th string: ";
+            }
+        }
     }
 
-    static enum Tuning { STANDARD, DROPPED_D; }
+    static enum Tuning { STANDARD, DROPPED_D, DOUBLE_DROPPED_D; }
 
     private static InstrumentString[] getStrings(Tuning tuning) {
         switch (tuning) {
             default:
             case STANDARD:
-                return new InstrumentString[] {
-                        new InstrumentString("1st string: ", 52), /* E₄ */
-                        new InstrumentString("2nd string: ", 47), /* B₃ */
-                        new InstrumentString("3rd string: ", 43), /* G₃ */
-                        new InstrumentString("4th string: ", 38), /* D₃ */
-                        new InstrumentString("5th string: ", 33), /* A₂ */
-                        new InstrumentString("6th string: ", 28), /* E₂ */
-                };
+                return createStringSet(new int[] { 52, 47, 43, 38, 33, 28 }); /* E₄B₃G₃D₃A₂E₂ */
             case DROPPED_D:
-                return new InstrumentString[] {
-                        new InstrumentString("1st string: ", 52), /* E₄ */
-                        new InstrumentString("2nd string: ", 47), /* B₃ */
-                        new InstrumentString("3rd string: ", 43), /* G₃ */
-                        new InstrumentString("4th string: ", 38), /* D₃ */
-                        new InstrumentString("5th string: ", 33), /* A₂ */
-                        new InstrumentString("6th string: ", 26), /* D₂ */
-                };
+                return createStringSet(new int[] { 52, 47, 43, 38, 33, 26 }); /* E₄B₃G₃D₃A₂D₂ */
+            case DOUBLE_DROPPED_D:
+                return createStringSet(new int[] { 50, 47, 43, 38, 33, 26 }); /* D₄B₃G₃D₃A₂D₂ */
         }
     }
 

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="tunings_names">
-        <item>Standard</item>
-        <item>Dropped D</item>
+        <item>Standard (E₂A₂D₃G₃B₃E₄)</item>
+        <item>Dropped D (D₂A₂D₃G₃B₃E₄)</item>
+        <item>Double Dropped D (D₂A₂D₃G₃B₃D₄)</item>
     </string-array>
     <string-array name="tunings_values">
         <item>STANDARD</item>
         <item>DROPPED_D</item>
+        <item>DOUBLE_DROPPED_D</item>
     </string-array>
 
     <string-array name="algorithm_names">
@@ -26,3 +28,4 @@
         <item>AMDF</item>
     </string-array>
 </resources>
+

@@ -44,12 +44,12 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     private static final int MEAN_PITCH_SAMPLE_COUNT = 10;
     /** Used to calculate weight from probability */
     private static final float MEAN_PITCH_WEIGHT_EXPONENT = 10f;
-    /** The number of results used to detect overtones */
-    private static final int OVERTONE_DETECTION_SAMPLE_COUNT = 10;
+    /** The number of results used to correct overtones */
+    private static final int OVERTONE_CORRECTION_SAMPLE_COUNT = 10;
     /** Results this close to twice the fundamental are assumed to be overtones */
-    private static final float OVERTONE_DETECTION_THRESHOLD = 0.01f;
+    private static final float OVERTONE_CORRECTION_THRESHOLD = 0.01f;
     private static final int PITCH_HISTORY_SIZE = Math.max(MEAN_PITCH_SAMPLE_COUNT,
-            OVERTONE_DETECTION_SAMPLE_COUNT);
+            OVERTONE_CORRECTION_SAMPLE_COUNT);
 
     private static final int PERMISSION_REQUEST_RECORD_AUDIO = 0;
 
@@ -135,17 +135,17 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         float pitch = result.getPitch();
         float probability = result.getProbability();
 
-        if (getOvertoneDetectionEnabled(this)) {
+        if (getOvertoneCorrectionEnabled(this)) {
             int samples = 0;
             float overtoneDistance;
 
             for (PitchResult fundamental : mPreviousResults) {
                 overtoneDistance = Math.abs((pitch - 2 * fundamental.pitch) / fundamental.pitch);
-                if (overtoneDistance < OVERTONE_DETECTION_THRESHOLD) {
+                if (overtoneDistance < OVERTONE_CORRECTION_THRESHOLD) {
                     pitch /= 2;
                     break;
                 }
-                if (++samples >= OVERTONE_DETECTION_SAMPLE_COUNT) {
+                if (++samples >= OVERTONE_CORRECTION_SAMPLE_COUNT) {
                     break;
                 }
             }
