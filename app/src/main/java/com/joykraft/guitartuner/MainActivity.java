@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
     }
 
     @Override
-    public void handlePitch(PitchDetectionResult result, AudioEvent audioEvent) {
+    public synchronized void handlePitch(PitchDetectionResult result, AudioEvent audioEvent) {
         float pitch = result.getPitch();
         float probability = result.getProbability();
 
@@ -192,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         return samples > 0 ? pitchSum / accumulatedWeight : -1;
     }
 
-    private void updatePitchViews() {
+    private synchronized void updatePitchViews() {
         final float pitch = getWeightedAveragePitch();
 
         if (pitch <= 0) {
