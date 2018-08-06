@@ -29,10 +29,30 @@ class AppPreferences {
         return Enum.valueOf(PitchEstimationAlgorithm.class, algorithm);
     }
 
-    static Tuning getTuning(Context context) {
+    private static String getTuningValue(Context context) {
         String key = context.getString(R.string.key_preference_tuning);
-        String tuning = getSharedPreferences(context).getString(key, "STANDARD");
-        return Enum.valueOf(Tuning.class, tuning);
+        return getSharedPreferences(context).getString(key, "STANDARD");
+    }
+
+    static Tuning getTuning(Context context) {
+        return Enum.valueOf(Tuning.class, getTuningValue(context));
+    }
+
+    static String getTuningEntry(Context context) {
+        String[] entries = context.getResources().getStringArray(R.array.tunings_names);
+        String[] entryValues = context.getResources().getStringArray(R.array.tunings_values);
+        String value = getTuningValue(context);
+
+        int index = 0;
+
+        for (int i = 0; i < entryValues.length; i++) {
+            if (entryValues[i].equals(value)) {
+                index = i;
+                break;
+            }
+        }
+
+        return entries[index];
     }
 
 }

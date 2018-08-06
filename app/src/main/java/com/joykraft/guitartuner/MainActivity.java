@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
 
     private AudioDispatcher mDispatcher;
     private AudioProcessor mProcessor;
-    private TextView mPitchText, mNoteText, mStringText;
+    private TextView mTuningText, mStringText, mNoteText, mPitchText;
     private PitchMeter mPitchMeter;
 
     private Deque<PitchResult> mPreviousResults = new LinkedList<PitchResult>();
@@ -78,14 +78,19 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPitchText = (TextView) findViewById(R.id.pitchText);
-        mNoteText = (TextView) findViewById(R.id.noteText);
+        mTuningText = (TextView) findViewById(R.id.tuningText);
         mStringText = (TextView) findViewById(R.id.stringText);
+        mNoteText = (TextView) findViewById(R.id.noteText);
+        mPitchText = (TextView) findViewById(R.id.pitchText);
         mPitchMeter = (PitchMeter) findViewById(R.id.pitchMeter);
     }
 
     @Override
     protected void onStart() {
+
+        mTuningText.setText(TextUtils.concat(getString(R.string.tuningLabel),
+                getTuningEntry(this)), TextView.BufferType.SPANNABLE);
+
         super.onStart();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
