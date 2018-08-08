@@ -55,4 +55,19 @@ class AppPreferences {
         return entries[index];
     }
 
+    static boolean getEasterEgg(Context context) {
+        String key = context.getString(R.string.key_preference_easter_egg);
+        return getSharedPreferences(context).getBoolean(key, false);
+    }
+
+    static void toggleEasterEgg(Context context) {
+        setEasterEgg(context, !getEasterEgg(context));
+    }
+
+    private static void setEasterEgg(Context context, boolean easterEgg) {
+        getSharedPreferences(context).edit()
+                .putBoolean(context.getString(R.string.key_preference_easter_egg), easterEgg)
+                .apply();
+    }
+
 }

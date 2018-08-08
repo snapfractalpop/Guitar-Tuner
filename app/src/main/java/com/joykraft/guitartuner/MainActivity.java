@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.Deque;
@@ -83,6 +84,14 @@ public class MainActivity extends AppCompatActivity implements PitchDetectionHan
         mNoteText = (TextView) findViewById(R.id.noteText);
         mPitchText = (TextView) findViewById(R.id.pitchText);
         mPitchMeter = (PitchMeter) findViewById(R.id.pitchMeter);
+
+        mTuningText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                toggleEasterEgg(MainActivity.this);
+                return true;
+            }
+        });
     }
 
     @Override

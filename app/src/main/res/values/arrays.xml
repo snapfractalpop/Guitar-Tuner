@@ -5,6 +5,11 @@
         <item>Dropped D (D₂A₂D₃G₃B₃E₄)</item>
         <item>Double Dropped D (D₂A₂D₃G₃B₃D₄)</item>
     </string-array>
+    <string-array name="tunings_names_easter_egg">
+        <item>Normal</item>
+        <item>Dirty D</item>
+        <item>Don Grungio</item>
+    </string-array>
     <string-array name="tunings_values">
         <item>STANDARD</item>
         <item>DROPPED_D</item>

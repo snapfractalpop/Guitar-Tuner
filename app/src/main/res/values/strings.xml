@@ -16,5 +16,7 @@
     <string name="key_preference_tuning">preferenceTuning</string>
     <string name="key_preference_algorithm">preferenceAlgorithm</string>
     <string name="key_preference_overtone_correction">preferenceOvertoneDetection</string>
+    <string name="key_preference_easter_egg">preferenceEasterEgg</string>
+
     <string name="preference_summary_overtone_correction">The pitch detection algorithm sometimes detects the 2f harmonic partial as the fundamental. This attempts to detect such errors and correct them.</string>
 </resources>
