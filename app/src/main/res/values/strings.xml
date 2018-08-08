@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Guitar Tuner</string>
+    <string name="pitch">%1$f Hz</string>
+    <string name="note">%1$f</string>
+</resources>
